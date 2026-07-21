@@ -1,0 +1,5 @@
+{
+  "account_id": "acct_fixture_001",
+  "signup_at": "2026-07-15T00:00:00Z",
+  "note_for_eval": "signup_at doit être interprété comme < 14 jours avant la date d'exécution de l'audit pour ce fixture (compte en onboarding)."
+}

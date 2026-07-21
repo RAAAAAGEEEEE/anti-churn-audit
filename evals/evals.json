@@ -1,0 +1,123 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Scénarios d'évaluation du pipeline anti-churn-audit. Chaque scénario pointe vers un fixture sous evals/fixtures/<id>/ et décrit le comportement attendu du skill lorsqu'il audite ce fixture. Ces evals sont conçus pour être vérifiés manuellement ou par un futur harness LLM-as-grader — ils ne sont pas un test unitaire exécutable au sens classique, car le pipeline est exécuté par le modèle, pas par du code déterministe.",
+  "scenarios": [
+    {
+      "id": "stripe-complete",
+      "fixture": "evals/fixtures/stripe-complete",
+      "stresses": ["Phase 1 discovery", "Phase 4 evidence tracing", "Rule C"],
+      "expected": [
+        "Le webhook Stripe est trouvé et tracé jusqu'à L3 (chaîne fonctionnelle reliée)",
+        "L'idempotence (event_id) est trouvée et vérifiée",
+        "Smart Retries est marqué EXTERNAL_UNKNOWN, jamais ABSENT ni VERIFIED",
+        "Aucun moteur de retry custom n'est imposé ou recommandé en P0/P1"
+      ]
+    },
+    {
+      "id": "stripe-incomplete",
+      "fixture": "evals/fixtures/stripe-incomplete",
+      "stresses": ["Phase 4 evidence tracing", "Phase 8 classification", "Phase 11 remediation"],
+      "expected": [
+        "invoice.payment_failed est absent ou la chaîne est incomplète (le handler reçoit l'event mais n'agit pas)",
+        "Le finding correspondant est marqué severity=P0",
+        "automation=AUTO_WITH_APPROVAL (modification de code requise)",
+        "Une checklist dashboard est produite en complément (EXTERNAL_CHECKLIST.md)"
+      ]
+    },
+    {
+      "id": "paddle-mor",
+      "fixture": "evals/fixtures/paddle-mor",
+      "stresses": ["Rule D", "Provider matrix"],
+      "expected": [
+        "L'absence de moteur de retry custom est marquée NOT_APPLICABLE, jamais comme un manque",
+        "subscription.past_due est audité",
+        "La restauration des droits après récupération de paiement est auditée"
+      ]
+    },
+    {
+      "id": "multi-provider",
+      "fixture": "evals/fixtures/multi-provider",
+      "stresses": ["Rule F", "Provider matrix"],
+      "expected": [
+        "Stripe et Paddle sont audités dans des sous-sections séparées",
+        "Aucun statut global mensonger n'est produit en fusionnant les deux providers",
+        "Un mapping account/provider est demandé avant tout score combiné"
+      ]
+    },
+    {
+      "id": "no-analytics",
+      "fixture": "evals/fixtures/no-analytics",
+      "stresses": ["Rule A", "Phase 10 scoring"],
+      "expected": [
+        "Aucun health score SQL n'est généré",
+        "Le scoring comportemental est marqué DATA_REQUIRED",
+        "Un plan d'instrumentation est proposé en P0 ou P1 selon le contexte"
+      ]
+    },
+    {
+      "id": "periodic-product",
+      "fixture": "evals/fixtures/periodic-product",
+      "stresses": ["Rule H", "Phase 2 product context"],
+      "expected": [
+        "Le seuil +14 jours d'inactivité n'est pas appliqué",
+        "La cadence attendue, le renouvellement et l'outcome sont demandés/priorisés",
+        "Le paiement est utilisé comme signal prioritaire par rapport à l'inactivité brute"
+      ]
+    },
+    {
+      "id": "user-only-tracking",
+      "fixture": "evals/fixtures/user-only-tracking",
+      "stresses": ["Rule B", "Phase 5 data readiness"],
+      "expected": [
+        "Le score B2B account-level est bloqué ou affiché avec une couverture faible",
+        "Un plan de mapping account-level (user → account) est proposé"
+      ]
+    },
+    {
+      "id": "cold-start",
+      "fixture": "evals/fixtures/cold-start",
+      "stresses": ["Rule G"],
+      "expected": [
+        "Le compte/produit est routé vers un plan d'onboarding",
+        "Aucune alerte silent churn n'est présentée comme définitive pour ce compte"
+      ]
+    },
+    {
+      "id": "webhook-comment-only",
+      "fixture": "evals/fixtures/webhook-comment-only",
+      "stresses": ["Phase 4 evidence tracing", "Status model"],
+      "expected": [
+        "Le terme recherché n'est trouvé que dans un commentaire (evidence_level=L0)",
+        "Le statut n'est jamais VERIFIED pour ce mécanisme"
+      ]
+    },
+    {
+      "id": "duplicate-webhook",
+      "fixture": "evals/fixtures/duplicate-webhook",
+      "stresses": ["Provider matrix", "Data readiness"],
+      "expected": [
+        "L'absence de contrôle event_id/déduplication est détectée",
+        "Le finding correspondant note le risque de traitement en double d'un même événement livré plusieurs fois"
+      ]
+    },
+    {
+      "id": "unrestored-entitlement",
+      "fixture": "evals/fixtures/unrestored-entitlement",
+      "stresses": ["Provider matrix", "Phase 8 classification"],
+      "expected": [
+        "Un paiement récupéré (invoice.paid après échec) sans restauration des droits est détecté",
+        "Le finding correspondant est marqué severity=P0"
+      ]
+    },
+    {
+      "id": "bad-fit",
+      "fixture": "evals/fixtures/bad-fit",
+      "stresses": ["Phase 7 strategy boundaries", "Rule J"],
+      "expected": [
+        "Aucune rétention automatique n'est recommandée pour ce client",
+        "Le finding est marqué STRATEGY_REQUIRED",
+        "Le rapport mentionne explicitement le non-regrettable churn"
+      ]
+    }
+  ]
+}

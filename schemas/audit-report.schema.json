@@ -1,0 +1,266 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://anti-churn-audit/schemas/audit-report.schema.json",
+  "title": "AntiChurnAuditReport",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generated_at",
+    "repo",
+    "sha",
+    "product_context",
+    "provider_matrix",
+    "findings",
+    "signals",
+    "scoring",
+    "data_readiness",
+    "external_settings",
+    "limitations"
+  ],
+  "definitions": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "VERIFIED",
+        "PARTIAL",
+        "ABSENT",
+        "EXTERNAL_UNKNOWN",
+        "NOT_APPLICABLE",
+        "DATA_REQUIRED",
+        "CONTEXT_REQUIRED",
+        "STRATEGY_REQUIRED",
+        "BLOCKED"
+      ]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["HIGH", "MEDIUM", "LOW"]
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["P0", "P1", "P2", "INFO"]
+    },
+    "automation": {
+      "type": "string",
+      "enum": [
+        "AUTO_SAFE",
+        "AUTO_WITH_APPROVAL",
+        "MANUAL_EXTERNAL",
+        "MANUAL_CODE",
+        "DATA_DEPENDENT",
+        "STRATEGY_HUMAN",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "evidence_level": {
+      "type": "string",
+      "enum": ["L0", "L1", "L2", "L3", "L4"],
+      "description": "L0=terme trouvé, L1=import/config, L2=handler/requête branché, L3=chaîne fonctionnelle reliée, L4=test automatisé pertinent"
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "evidence_level", "explanation", "limitation"],
+      "properties": {
+        "file": { "type": "string" },
+        "line_start": { "type": "integer", "minimum": 1 },
+        "line_end": { "type": "integer", "minimum": 1 },
+        "excerpt": { "type": "string", "maxLength": 500 },
+        "evidence_level": { "$ref": "#/definitions/evidence_level" },
+        "explanation": { "type": "string" },
+        "limitation": { "type": "string" }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finding_id",
+        "point_id",
+        "title",
+        "status",
+        "severity",
+        "confidence",
+        "automation",
+        "why_it_matters",
+        "evidence"
+      ],
+      "properties": {
+        "finding_id": { "type": "string", "pattern": "^F-[0-9]{3,}$" },
+        "point_id": {
+          "type": "string",
+          "description": "Identifiant du point Tibo (T2, T3, T4, T7, T8, T10, T11) ou stratégique (T1, T5, T6, T9, T12)"
+        },
+        "title": { "type": "string" },
+        "status": { "$ref": "#/definitions/status" },
+        "severity": { "$ref": "#/definitions/severity" },
+        "confidence": { "$ref": "#/definitions/confidence" },
+        "automation": { "$ref": "#/definitions/automation" },
+        "why_it_matters": { "type": "string" },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/evidence" }
+        },
+        "provider": { "type": "string" },
+        "blocking_reason": { "type": "string" }
+      }
+    },
+    "signal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signal_id", "name", "available", "weight", "evidence_level"],
+      "properties": {
+        "signal_id": {
+          "type": "string",
+          "enum": ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]
+        },
+        "name": { "type": "string" },
+        "available": { "type": "boolean" },
+        "weight": { "type": "number", "minimum": 0, "maximum": 100 },
+        "risk_value": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "risk_i entre 0 et 1, null si available=false"
+        },
+        "threshold_or_config": { "type": "string" },
+        "evidence_level": { "$ref": "#/definitions/evidence_level" },
+        "notes": { "type": "string" }
+      }
+    }
+  },
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "repo": { "type": "string" },
+    "sha": { "type": "string" },
+    "stack": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "architecture": { "type": "string" },
+    "product_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["usage_type", "account_model", "context_known"],
+      "properties": {
+        "usage_type": {
+          "type": "string",
+          "enum": [
+            "daily",
+            "weekly",
+            "periodic",
+            "transactional",
+            "seasonal",
+            "custom",
+            "unknown"
+          ]
+        },
+        "account_model": {
+          "type": "string",
+          "enum": ["b2b_account", "b2c_user", "hybrid", "unknown"]
+        },
+        "core_action": { "type": ["string", "null"] },
+        "outcome_event": { "type": ["string", "null"] },
+        "expected_value_window_days": { "type": ["integer", "null"] },
+        "context_known": { "type": "boolean" },
+        "product_age_days": { "type": ["integer", "null"] },
+        "cold_start": { "type": "boolean" }
+      }
+    },
+    "provider_matrix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["provider", "commercial_model", "recovery_owner"],
+        "properties": {
+          "provider": { "type": "string" },
+          "commercial_model": {
+            "type": "string",
+            "enum": ["merchant_of_record", "merchant_direct", "app_store", "unknown"]
+          },
+          "recovery_owner": {
+            "type": "string",
+            "enum": ["provider", "application", "hybrid", "unknown"]
+          },
+          "webhook_signature_verified": { "$ref": "#/definitions/status" },
+          "idempotency_verified": { "$ref": "#/definitions/status" },
+          "entitlement_restore_verified": { "$ref": "#/definitions/status" },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/finding" }
+    },
+    "signals": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/signal" }
+    },
+    "scoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["engine", "data_coverage", "insufficient_data"],
+      "properties": {
+        "engine": { "const": "risk-engine" },
+        "engine_version": { "type": "string" },
+        "risk_score": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "tier": {
+          "type": ["string", "null"],
+          "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL", null]
+        },
+        "data_coverage": { "type": "number", "minimum": 0, "maximum": 1 },
+        "insufficient_data": { "type": "boolean" },
+        "level": {
+          "type": "string",
+          "enum": ["account", "user", "unknown"]
+        },
+        "weights_profile": { "type": "string" }
+      }
+    },
+    "data_readiness": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "account_id_stable": { "$ref": "#/definitions/status" },
+        "user_to_account_mapping": { "$ref": "#/definitions/status" },
+        "provider_customer_mapping": { "$ref": "#/definitions/status" },
+        "multi_subscription_support": { "$ref": "#/definitions/status" },
+        "event_idempotency": { "$ref": "#/definitions/status" },
+        "timestamps_consistent": { "$ref": "#/definitions/status" },
+        "currency_minor_units": { "$ref": "#/definitions/status" },
+        "product_events_present": { "$ref": "#/definitions/status" },
+        "core_action_defined": { "$ref": "#/definitions/status" },
+        "outcome_event_defined": { "$ref": "#/definitions/status" },
+        "historical_consistency": { "$ref": "#/definitions/status" },
+        "intervention_data": { "$ref": "#/definitions/status" },
+        "churn_labels": { "$ref": "#/definitions/status" },
+        "voluntary_involuntary_distinction": { "$ref": "#/definitions/status" }
+      }
+    },
+    "external_settings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["item", "status", "how_to_check"],
+        "properties": {
+          "item": { "type": "string" },
+          "status": { "$ref": "#/definitions/status" },
+          "how_to_check": { "type": "string" }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

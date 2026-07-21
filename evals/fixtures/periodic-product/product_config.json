@@ -1,0 +1,9 @@
+{
+  "product_name": "fixture-periodic-tax-filer",
+  "usage_type": "periodic",
+  "expected_cadence": "annual",
+  "core_action": "submit_filing",
+  "outcome_event": "filing_accepted",
+  "renewal_at_field": "next_filing_deadline",
+  "note": "Produit d'usage annuel (déclaration fiscale) : l'utilisateur type se connecte quelques fois par an, autour de l'échéance."
+}
