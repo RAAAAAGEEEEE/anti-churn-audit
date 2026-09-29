@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-09-29T12:00:00Z",
+  "repo": "evals/fixtures/stripe-incomplete",
+  "sha": "0000000000000000000000000000000000000000",
+  "stack": ["node", "express", "stripe"],
+  "architecture": "single webhook route",
+  "product_context": {
+    "usage_type": "unknown",
+    "account_model": "unknown",
+    "core_action": null,
+    "outcome_event": null,
+    "expected_value_window_days": null,
+    "context_known": false,
+    "product_age_days": null,
+    "cold_start": false
+  },
+  "provider_matrix": [
+    {
+      "provider": "stripe",
+      "commercial_model": "merchant_direct",
+      "recovery_owner": "hybrid",
+      "webhook_signature_verified": "VERIFIED",
+      "idempotency_verified": "ABSENT",
+      "entitlement_restore_verified": "ABSENT",
+      "notes": "Illustrative example built from the stripe-incomplete fixture."
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-001",
+      "point_id": "T3",
+      "title": "invoice.payment_failed has no handler",
+      "status": "ABSENT",
+      "severity": "P0",
+      "confidence": "HIGH",
+      "automation": "AUTO_WITH_APPROVAL",
+      "why_it_matters": "A failed payment triggers no action in the application, so past-due accounts are never flagged or contacted.",
+      "evidence": [
+        {
+          "file": "webhook.js",
+          "line_start": 23,
+          "line_end": 25,
+          "evidence_level": "L2",
+          "explanation": "The route only handles customer.subscription.deleted.",
+          "limitation": "Handlers registered in other files or in the provider dashboard are not visible from this fixture."
+        }
+      ],
+      "provider": "stripe"
+    }
+  ],
+  "signals": [
+    {
+      "signal_id": "S3",
+      "name": "payment failures",
+      "available": false,
+      "weight": 16,
+      "risk_value": null,
+      "evidence_level": "L0",
+      "notes": "No payment failure data is persisted."
+    }
+  ],
+  "scoring": {
+    "engine": "risk-engine",
+    "risk_score": null,
+    "tier": null,
+    "data_coverage": 0.1,
+    "insufficient_data": true,
+    "level": "unknown"
+  },
+  "data_readiness": {
+    "event_idempotency": "ABSENT",
+    "product_events_present": "ABSENT"
+  },
+  "external_settings": [
+    {
+      "item": "Stripe Smart Retries",
+      "status": "EXTERNAL_UNKNOWN",
+      "how_to_check": "Stripe dashboard, Billing settings, Revenue recovery."
+    }
+  ],
+  "limitations": [
+    "Static analysis of one file; production data not available.",
+    "risk_score withheld because data_coverage is below 0.50."
+  ]
+}

@@ -52,7 +52,7 @@ continuer les phases suivantes.
 
 ## PHASE 3 — Static Mechanism Audit
 
-Auditer les points Tibo mécaniques (jamais les points stratégiques ici) :
+Auditer les points T mécaniques (jamais les points stratégiques ici) :
 
 - T2 onboarding/activation
 - T3 paiements échoués

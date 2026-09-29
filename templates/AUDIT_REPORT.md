@@ -27,7 +27,7 @@ Conclusion globale : {{global_conclusion}}
 |---|---|---|---|---|---|
 | {{provider}} | {{commercial_model}} | {{recovery_owner}} | {{webhook_signature_verified}} | {{idempotency_verified}} | {{entitlement_restore_verified}} |
 
-## Résultats Tibo
+## Résultats par point T
 
 | ID | Point | Statut | Sévérité | Preuve | Automatisation |
 |----|-------|--------|----------|--------|----------------|

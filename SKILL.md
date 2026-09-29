@@ -13,6 +13,13 @@ description: >
   l'intégration Stripe/Paddle/Lemon Squeezy/Chargebee/RevenueCat côté
   paiements échoués et webhooks, ou générer un plan de remédiation
   anti-churn priorisé (P0/P1/P2).
+license: MIT
+compatibility: Claude Code ou tout agent qui charge des Agent Skills et sait lire le système de fichiers local. Python 3.8+ (bibliothèque standard) uniquement pour les deux validateurs JSON. Aucun accès réseau requis.
+allowed-tools: Read Grep Glob
+metadata:
+  author: Anto1nx
+  version: "0.1.1"
+  repository: https://github.com/RAAAAAGEEEEE/anti-churn-audit
 ---
 
 # anti-churn-audit
@@ -152,6 +159,48 @@ python3 scripts/validate_report.py <output-dir>/anti-churn-audit.json
 python3 scripts/validate_manifest.py <output-dir>/remediation-manifest.json
 ```
 
+## Périmètre
+
+Dans le périmètre : lecture statique du code d'un SaaS, intégration des
+providers de paiement, mécanismes anti-churn visibles, scoring heuristique,
+plan de remédiation. Hors périmètre : données de production, réglages de
+dashboard, décisions de pricing ou de remise, contact de clients, prédiction
+calibrée.
+
+## Exemples d'invocation
+
+```
+/anti-churn-audit audit
+/anti-churn-audit plan F-001
+/anti-churn-audit fix F-001
+/anti-churn-audit verify all
+```
+
+Un exemple de sortie JSON illustratif est dans
+`examples/stripe-incomplete/` (construit à partir d'un fixture d'éval, pas
+d'un audit réel).
+
+## Repli et erreurs
+
+- Contexte produit manquant : ne pas bloquer, marquer `CONTEXT_REQUIRED` ou
+  `DATA_REQUIRED` et continuer.
+- Validateur en échec : corriger le JSON avant de livrer, ne jamais livrer un
+  rapport non validé.
+- Réglage de dashboard non vérifiable : `EXTERNAL_UNKNOWN`, jamais `ABSENT`.
+- `fix` demandé sur un finding manuel ou stratégique : refuser et expliquer.
+
+## Sécurité et confidentialité
+
+Aucune donnée ne sort de la machine, aucun appel réseau. Les secrets trouvés
+dans le code audité sont signalés par fichier et ligne, jamais reproduits.
+Détail dans `docs/PRIVACY_AND_SECURITY.md`.
+
+## Installation, évals, version
+
+Installation personnelle et par projet : `docs/INSTALLATION.md`. Scénarios
+d'éval : `evals/evals.json` et `evals/fixtures/`. Version : `0.1.1`, voir
+`CHANGELOG.md`.
+
 ## Limites honnêtes
 
 - Aucune précision prédictive garantie — `risk_score` est heuristique,
@@ -159,7 +208,7 @@ python3 scripts/validate_manifest.py <output-dir>/remediation-manifest.json
 - Aucune récupération de revenu garantie.
 - Compatibilité provider non exhaustive — voir `docs/PROVIDER_MATRIX.md`.
 - Aucun appel réseau, aucune donnée envoyée par défaut — voir
-  `docs/SECURITY.md`.
+  `docs/PRIVACY_AND_SECURITY.md`.
 
 ## Attribution
 

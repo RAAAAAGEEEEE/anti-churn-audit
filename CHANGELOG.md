@@ -3,6 +3,29 @@
 All notable changes to this project are documented here.
 Format loosely based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.1.1] - 2026-09-29
+
+### Added
+- Portable `SKILL.md` frontmatter: `license`, `compatibility`, `allowed-tools`,
+  `metadata` (author, version, repository).
+- `CONTRIBUTING.md`, `SECURITY.md`, and `docs/` pages: `INSTALLATION.md`,
+  `USAGE.md`, `CONFIGURATION.md`, `TROUBLESHOOTING.md`, `LIMITATIONS.md`.
+- `examples/stripe-incomplete/`: illustrative report and manifest that pass both
+  validators.
+- Glossary of `T`, `S`, `L` and `F` identifiers in `docs/REPORT_FORMAT.md`.
+
+### Changed
+- The security page is renamed `docs/PRIVACY_AND_SECURITY.md`; vulnerability
+  reporting moved to the root `SECURITY.md`.
+- README rewritten to the documentation standard (status, prerequisites,
+  quickstart, limits, roadmap).
+- An unexplained label on audit points is replaced by "point T", now defined in the glossary.
+- `LICENSE` names the author instead of "contributors".
+
+### Removed
+- The "public / private separation" section of `docs/ARCHITECTURE.md`, which
+  referred to a private overlay outside this repository.
+
 ## [0.1.0] - 2026-07-21
 
 ### Added

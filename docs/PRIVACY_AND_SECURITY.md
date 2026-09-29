@@ -1,4 +1,6 @@
-# Security
+# Privacy and security
+
+Related: [../SECURITY.md](../SECURITY.md), [USAGE.md](USAGE.md), [LIMITATIONS.md](LIMITATIONS.md).
 
 ## Périmètre de l'audit
 
@@ -34,9 +36,6 @@ sortie choisi par l'utilisateur.
 - Les fixtures d'évaluation (`evals/fixtures/`) ne contiennent que des
   données synthétiques, jamais de données de production réelles.
 
-## Rapport d'une vulnérabilité
+## Signaler une vulnérabilité
 
-Ouvrir une issue sur ce dépôt en décrivant le problème sans détails
-permettant une exploitation immédiate si la vulnérabilité est critique ;
-pour un problème sensible, contacter le mainteneur en privé avant
-publication.
+Voir [../SECURITY.md](../SECURITY.md).

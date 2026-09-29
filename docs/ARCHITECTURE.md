@@ -15,7 +15,7 @@ repo utilisateur (lecture seule en mode audit)
         │
         ├─ Discovery (stack, providers, analytics, comptes)
         ├─ Product context (usage type, account model)
-        ├─ Static mechanism audit (points Tibo T2/T3/T4/T7/T8/T10/T11)
+        ├─ Static mechanism audit (points d'audit T2/T3/T4/T7/T8/T10/T11)
         ├─ Evidence tracing (niveaux L0-L4)
         ├─ Data readiness
         ├─ External settings checklist
@@ -58,11 +58,3 @@ volontairement déterministe en P0 (pondérations fixes mais configurables,
 pas de modèle entraîné) avec un point d'extension explicite pour brancher
 plus tard une calibration statistique ou un modèle ML (voir
 `docs/SCORING_MODEL.md#interface-dextension`).
-
-## Séparation public / privé
-
-Ce dépôt est la **source de vérité fonctionnelle**. Un overlay privé
-(`anti-churn-audit-private`, hors de ce dépôt) peut ajouter des conventions
-personnelles et une intégration à un agent personnel, sans dupliquer manuellement les
-règles publiques — voir le build déterministe décrit dans le README du
-dépôt privé.

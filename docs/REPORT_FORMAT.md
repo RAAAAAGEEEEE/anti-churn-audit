@@ -38,7 +38,7 @@ Conclusion globale :
 ## Résumé exécutif
 ## Top 3 quick wins
 ## Provider matrix
-## Résultats Tibo
+## Résultats par point T
 
 | ID | Point | Statut | Sévérité | Preuve | Automatisation |
 |----|-------|--------|----------|--------|----------------|
@@ -83,3 +83,19 @@ Chaque finding (Markdown et JSON) doit contenir :
 
 Voir `templates/AUDIT_REPORT.md`, `templates/REMEDIATION_PLAN.md`, et
 `templates/EXTERNAL_CHECKLIST.md` pour les gabarits prêts à remplir.
+
+## Glossaire des identifiants
+
+- **T1 à T12** : points d'audit. Mécaniques, vérifiables dans le code :
+  T2 (onboarding/activation), T3 (paiements échoués), T4 (silent churn et
+  instrumentation), T7 (GRR/NRR), T8 (expansion), T10 (cancellation flow),
+  T11 (win-back). Stratégiques, jamais tranchés automatiquement : T1, T5,
+  T6, T9, T12 (statut `STRATEGY_REQUIRED`).
+- **S1 à S8** : signaux du score de risque, détaillés dans
+  `docs/SCORING_MODEL.md`.
+- **L0 à L4** : niveaux de preuve, détaillés dans `docs/EXECUTION_FLOW.md`
+  (phase 4).
+- **F-001, F-002...** : identifiants de findings, stables entre le
+  rapport, le plan et le manifeste.
+- **GRR / NRR** : gross / net revenue retention (rétention de revenu
+  brute / nette).

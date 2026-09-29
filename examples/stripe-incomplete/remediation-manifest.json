@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-09-29T12:00:00Z",
+  "repo": "evals/fixtures/stripe-incomplete",
+  "sha": "0000000000000000000000000000000000000000",
+  "items": [
+    {
+      "finding_id": "F-001",
+      "title": "Handle invoice.payment_failed",
+      "why_it_matters": "Failed payments are never flagged, so involuntary churn goes unnoticed.",
+      "evidence": [{ "file": "webhook.js", "line_start": 23, "line_end": 25 }],
+      "status": "ABSENT",
+      "severity": "P0",
+      "confidence": "HIGH",
+      "automation": "AUTO_WITH_APPROVAL",
+      "proposed_files": ["webhook.js"],
+      "tests_required": ["webhook test for invoice.payment_failed"],
+      "rollback": "git revert the commit that adds the handler",
+      "owner": "engineering",
+      "estimated_effort": "S",
+      "requires_explicit_approval": true
+    }
+  ]
+}
