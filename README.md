@@ -5,6 +5,22 @@ mécanismes anti-churn réellement branchés dans le code, et distingue
 honnêtement ce qui est vérifiable du code de ce qui dépend de données, de
 réglages de dashboard ou d'une décision humaine.
 
+## Comment ça marche
+
+Pour un débutant, trois gestes, et aucun copier-coller du dépôt dans la conversation :
+
+1. **Installer le skill une fois** : `git clone https://github.com/RAAAAAGEEEEE/anti-churn-audit ~/.claude/skills/anti-churn-audit`
+   (disponible dans tous vos projets), ou le même clone dans `.claude/skills/anti-churn-audit` à la racine d'un
+   projet (disponible dans ce projet seulement). Sous Windows PowerShell, remplacez `~` par
+   `$env:USERPROFILE`. Détail : [docs/INSTALLATION.md](docs/INSTALLATION.md).
+2. **Le demander** : depuis le dépôt de votre SaaS, écrivez simplement « audite l'anti-churn de ce SaaS », ou tapez `/anti-churn-audit`.
+3. **Se laisser guider** : Claude charge le skill d'après sa description, lit le code en lecture seule et produit le rapport Markdown, le JSON et le plan de remédiation, chaque affirmation avec sa preuve `fichier:ligne`.
+
+C'est le fonctionnement de tous les skills Claude Code : un dossier avec un `SKILL.md` placé dans
+`~/.claude/skills/<nom>/` (personnel) ou `.claude/skills/<nom>/` (projet) ; Claude le charge
+automatiquement quand votre demande correspond à sa `description`, et `/<nom>` le lance à la main.
+[officiel : [skills](https://code.claude.com/docs/en/skills#where-skills-live), page consultée le 2026-10-05]
+
 ## Problème résolu
 
 La plupart des audits « anti-churn » mélangent trois choses différentes : ce
